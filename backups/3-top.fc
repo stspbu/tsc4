@@ -29,7 +29,6 @@
 
 -}
 
-(slice, slice) sload_ref(slice s) asm "LDREFRTOS";
 (slice, int) check_prefix(slice s1, slice s2) asm "SDBEGINSXQ";
 (int) ubitsize(int n) asm "UBITSIZE";
 
@@ -48,32 +47,31 @@
     slice prev_wslice = null();
 
     ;; 320189 / 305020 b300
-    ;; 16785 -> 16677
 
-    int exec = 0;
-    slice s = linked_list.begin_parse();
-
-    do {
+    while (~ null?(linked_list)) {
+        slice s = linked_list.begin_parse();
         int sz = slice_bits(s);
 
         while (sz > 0) {
             int wlen = min(sz, 511 - prev_wlen);
             sz -= wlen;
 
-            builder wbuilder = begin_cell();
+            builder wbuilder = null();
             slice word = s~load_bits(wlen);
 
             if (prev_wlen > 0) {
-                wbuilder = wbuilder.store_slice(prev_wslice);
+                wbuilder = begin_cell().store_slice(prev_wslice).store_slice(word);
                 wlen += prev_wlen;
+            } else {
+                wbuilder = begin_cell().store_slice(word);
             }
 
-            slice wslice = wbuilder.store_slice(word).end_cell().begin_parse();
+            slice wslice = wbuilder.end_cell().begin_parse();
+            int shift = wlen - flen;
 
             lst = cons(b, lst);
             b = begin_cell();
 
-            int shift = wlen - flen;
             while (shift >= 0) {
                 (wslice, int status) = check_prefix(wslice, fslice);
                 if (status) {
@@ -91,11 +89,11 @@
         }
 
         if (~ slice_refs_empty?(s)) {
-            (_, s) = s.sload_ref();
+            linked_list = s.preload_ref();
         } else {
-            exec = -1;
+            linked_list = null();
         }
-    } until(exec);
+    }
 
     if (prev_wlen > 0) {
         lst = cons(b, lst);

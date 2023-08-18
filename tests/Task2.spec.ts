@@ -35,4 +35,20 @@ describe('Task2', () => {
         // the check is done inside beforeEach
         // blockchain and task2 are ready to use
     });
+
+    it('2x3:3x2', async() => {
+        const a = [[1, 2, 3], [4, 5, 6]];
+        const b = [[7, 8], [9, 10], [11, 12]];
+
+        const result = await task2.getResult(a, b);
+        expect(result).toBe(true);
+    });
+
+    it('4x4:4x4', async() => {
+        const a = [[1, 2, 3, 4], [4, 5, 6, 7]];
+        const b = [[7, 8, 9, 10], [9, 10, 11, 12]];
+
+        const result = await task2.getResult(a, b);
+        expect(result).toBe(true);
+    });
 });

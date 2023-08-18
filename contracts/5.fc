@@ -1,7 +1,7 @@
 {-
   TASK 5 - Fibonacci sequence
   Implement a function that generates the Fibonacci
-  sequence from N to N+K terms (0<=N<=370; 0<=N+K<=370; 0<=K<=255).
+  sequence from N to N+K terms (0<=N<=370; 0<=N+K<=371; 0<=K<=255).
   The first two terms of the Fibonacci sequence are F_0 = 0 and F_1 = 1,
   and the rest are defined as F_n = F_(n-1) + F_(n-2).
   The resulting Fibonacci sequence should be stored in a tuple.
@@ -13,11 +13,111 @@
   1923063428480944139667114773918309212080528]
 -}
 
+;; bruteforce from 0, 1
+(tuple) simple(int k, int n) asm """
+1 PUSHINT
+0 PUSHINT
+
+ROT
+REPEAT:<{
+    TUCK
+    ADD
+}>
+
+ROT
+DEC
+REPEAT:<{
+    DUP2
+    ADD
+}>
+
+DEPTH
+DEC
+TUPLEVAR
+
+SWAP
+DROP
+""";
+
+;; bruteforce from given a, b
+(tuple) fill(int k, int a, int b) asm """
+ROT
+DEC
+REPEAT:<{
+    DUP2
+    ADD
+}>
+
+DEPTH
+DEC
+TUPLEVAR
+
+SWAP
+DROP
+""";
+
+;; extract initials with doubling
+(int, int) doubling(int n) asm """
+DEC
+DUP
+BITSIZE
+
+0 PUSHINT
+1 PUSHINT
+
+s2 PUSH
+DEC
+POW2
+s3 XCHG0
+
+REPEAT:<{
+DUP2
+
+MUL
+2 MULCONST
+s2 PUSH
+DUP
+MUL
+SUB
+
+s1 s2 s2 PU2XC  // a b c -> c b b a a
+MUL
+ROTREV
+MUL
+ADD
+
+s2 PUSH
+1 RSHIFT#
+s3 XCHG0
+
+s4 PUSH
+AND
+
+IF:<{
+    TUCK
+    ADD
+}>
+}>
+
+SWAP2
+DROP2
+""";
+
 () recv_internal() {
 }
 
 ;; testable
-(tuple) fibonacci_sequence (int n) method_id {
-  return null();
-}
+(tuple) fibonacci_sequence(int n, int k) method_id {
+    if (k == 0) {
+        return empty_tuple();
+    }
 
+    ;; 14785
+
+    if (n < 42) {
+        return simple(k, n);
+    } else {
+        (int a, int b) = doubling(n);
+        return fill(k, a, b);
+    }
+}

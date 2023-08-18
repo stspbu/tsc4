@@ -1,5 +1,5 @@
 {-
-  TASK 2 - Matrix multiplier
+  TASK 2 - Matrix multiplier:
   Write the method that multiplies one matrix by another.
   The 1st and 2nd parameter of the function will contain
   a matrix implemented using tuples (eg: [[1,2], [3,4]]).
@@ -9,11 +9,39 @@
   After calculating the result matrix, the function should return final result (as tuple).
 -}
 
+int tlen(tuple t) asm "TLEN";
+
 () recv_internal() {
 }
 
 ;; testable
 (tuple) matrix_multiplier(tuple matrixA, tuple matrixB) method_id {
-  return null();
-}
+    tuple result = empty_tuple();
 
+    (int i, int j, int k) = (0, 0, 0);
+    (int n, int m, int p) = (tlen(matrixA), tlen(matrixB), tlen(matrixB.at(0)));
+
+    repeat (n) {
+        tuple row = empty_tuple();
+
+        repeat (p) {
+            int s = 0;
+            repeat (m) {
+                s += matrixA.at(i).at(k) * matrixB.at(k).at(j);
+                k += 1;
+            }
+
+            k = 0;
+            row~tpush(s);
+
+            j += 1;
+        }
+
+        j = 0;
+        result~tpush(row);
+
+        i += 1;
+    }
+
+    return result;
+}

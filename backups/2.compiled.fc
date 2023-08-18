@@ -1,0 +1,60 @@
+/usr/local/bin/node --require /Applications/IntelliJ IDEA.app/Contents/plugins/JavaScriptLanguage/helpers/jest-intellij/lib/jest-intellij-stdin-fix.js /Users/vbushev/Documents/Projects/tsc4/node_modules/jest/bin/jest.js --colors --reporters /Applications/IntelliJ IDEA.app/Contents/plugins/JavaScriptLanguage/helpers/jest-intellij/lib/jest-intellij-reporter.js --verbose --testNamePattern=^Task2 4x4:4x4$ --runTestsByPath /Users/vbushev/Documents/Projects/tsc4/tests/Task2.spec.ts
+  console.log
+    // automatically generated from `contracts/imports/stdlib.fc` `contracts/2.fc`
+    PROGRAM{
+      DECLPROC recv_internal
+      90041 DECLMETHOD matrix_multiplier
+      recv_internal PROC:<{
+      }>
+      matrix_multiplier PROC:<{
+        NIL
+        0 PUSHINT
+        s0 s0 s3 PUSH3
+        TLEN
+        s5 PUSH
+        TLEN
+        s6 PUSH
+        0 INDEX
+        TLEN
+        s0 s2 XCHG
+        REPEAT:<{
+          NIL
+          s2 PUSH
+          REPEAT:<{
+            0 PUSHINT
+            s2 PUSH
+            REPEAT:<{
+              s9 s6 PUSH2
+              INDEXVAR
+              s5 PUSH
+              INDEXVAR
+              s9 s5 PUSH2
+              INDEXVAR
+              s7 PUSH
+              INDEXVAR
+              MUL
+              ADD
+              s0 s4 XCHG
+              INC
+              s0 s4 XCHG
+            }>
+            0 PUSHINT
+            s5 POP
+            TPUSH
+            s0 s4 XCHG
+            INC
+            s0 s4 XCHG
+          }>
+          s4 POP
+          s2 PUSH
+          s6 s4 XCHG2
+          TPUSH
+          s0 s4 XCHG
+          INC
+          s0 s4 XCHG
+          s0 s5 XCHG
+        }>
+        s5 s7 XCHG
+        7 BLKDROP
+      }>
+    }END>c

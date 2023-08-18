@@ -1,0 +1,221 @@
+{-
+  TASK 3 - Find and replace binary substring
+  Binary string is represented as a cell linked list: string splitted to chunks,
+  first chunk stored to the root cell, next one to the cell in ref and so on;
+  each cell can have only one ref.
+  Write the method that find and replaces one flags in the binary string
+  with another value. Flags and values can be can be of any length, but
+  strictly up to 128 bits. The method must replace every flag it finds.
+  Flag and the value to be replaced is guaranteed to be greater than 0.
+  Flag and the value may be of different lengths.
+  When there are overlapping flags, only the first one
+  from the overlap needs to be replaced (for example, if the flag is 101,
+  value is 111, and string is 10101, then the result would be 11101, but if
+  the string is 1010101, then the result would be 1110111).
+  Every cell in the input linked list, except for the last one
+  (the one that is the deepest in the tree), is guaranteed to be full
+  (guaranteed to contain 1023 bits).
+  The requirements on the output cell are more loose - only the concatenation of bits
+  from the linked list needs to match that of the expected answer, but the structure
+  itself may be different (for example, for the purposes of comparing the answer,
+  a cell with bit 1 and a ref containing bits 10 is the same as a cell containing
+  bit 11 and a ref with bit 0 - they both make up a bitstring 110).
+  Lets give a simple example. We have the target flag 101110101 and the value
+  to be written 111111111 as inputs, and a linked list of cells, in which the bit
+  value of the first cell ends with ...10100001011, and in the ref we have cell that
+  starts with 10101000111111...
+  The output should be a linked list where the first
+  cell ends with ...10100001111, and the second cell starts with 11111000111111...
+
+-}
+
+(int) bbits(builder b) asm "BBITS";
+(int) brembits(builder b) asm "BREMBITS";
+(int, builder, int) stuxq(int x, builder b, int l) asm "STUXQ NULLROTRIFNOT";
+(int) is_prefix(slice s1, slice s2) asm "SDPFX";
+(slice, int) check_prefix(slice s1, slice s2) asm "SDBEGINSXQ";
+(int) ubitsize(int n) asm "UBITSIZE";
+(int) sign(int n) asm "SGN";
+
+(tuple, builder) write_bit(tuple, int, builder) asm """
+DUP             // t i b b
+BREMBITS        // t i b rem
+IF:<{           // t i b
+    1 STU
+}>ELSE<{        // t i b
+    ROT         // i b t
+    CONS        // i r
+
+    NEWC        // i r b
+    ROT         // r b i
+    1 STUR
+}>
+""";
+
+(tuple, builder) write_num(tuple, int, builder, int) asm """
+DUP2            // t i b n b n
+BCHKBITSQ       // t i b n <res>
+IF:<{           // t i b n
+    STUX        // t b'
+}>ELSE<{        // t i b n
+    OVER        // t i b n b
+    BREMBITS    // t i b n rem
+
+    DUP2        // t i b n rem n rem
+    SUB         // t i b n rem delta
+
+    s4 PUSH     // t i b n rem delta i
+    OVER
+    RSHIFT      // t i b n rem delta x
+    ROT         // t i b n delta x rem
+
+    s4 PUSH     // t i b n delta x rem b
+    ROTREV      // t i b n delta b x rem
+    STUXR       // t i b n delta b'
+
+    s5 PUSH     // t i b n delta b' t
+    CONS
+    s5 XCHG0
+    DROP        // t' i b n delta
+
+    ROTREV      // t' i delta b n
+    DROP2       // t' i delta
+
+    DUP
+    POW2
+    DEC         // t' i delta floor
+
+    ROT
+    AND         // t' delta floor&i
+    NEWC        // t' delta floor&i b
+
+    ROT         // t' floor&i b delta
+    STUX        // t' b'
+}>
+""";
+
+() recv_internal() {
+}
+
+;; testable
+(cell) find_and_replace(int flag, int value, cell linked_list) method_id {
+    (int flen, int vlen) = (ubitsize(flag), ubitsize(value));
+    slice fslice = begin_cell().store_uint(flag, flen).end_cell().begin_parse();
+
+    builder b = begin_cell();
+    tuple lst = null();
+
+    int prev_wlen = 0;
+    slice prev_wslice = null();
+
+    ;; 320199 -> 309197
+
+    int batch_len = 300;
+    int min_len = batch_len + flen;
+
+    while (~ null?(linked_list)) {
+        slice s = linked_list.begin_parse();
+
+        while (slice_bits(s) >= min_len) {
+;;             ~strdump("it");
+            slice wslice = s.preload_bits(min_len);
+
+            int wlen = batch_len;
+            s~skip_bits(wlen);
+
+            if (prev_wlen > 0) {
+                wslice = begin_cell().store_slice(prev_wslice).store_slice(wslice).end_cell().begin_parse();
+
+                wlen += prev_wlen;
+                prev_wlen = 0;
+            }
+
+;;             ~strdump("loop");
+
+            int i = 0;
+            int status = 0;
+            int exec = 0;
+            do {
+                try {
+                    while (i < wlen) {
+                        (wslice, status) = check_prefix(wslice, fslice);
+                        if (status) {
+                            b~store_uint(value, vlen);
+                            i += flen;
+                        } else {
+                            int bit = wslice~load_uint(1);
+                            b~store_uint(bit, 1);
+                            i += 1;
+                        }
+                    }
+                    exec = -1;
+                } catch (x, n) {
+                    lst = cons(b, lst);
+                    b = begin_cell();
+                }
+            } until(exec);
+
+;;             ~strdump("after");
+;;             ~dump(wlen - i);
+
+            ;; pattern overlapping protection
+            s~skip_bits(i - wlen);
+        }
+
+        if (prev_wlen > 0) {
+            prev_wlen += slice_bits(s);
+            prev_wslice = begin_cell().store_slice(prev_wslice).store_slice(s).end_cell().begin_parse();
+        } else {
+            prev_wlen = slice_bits(s);
+            prev_wslice = s;
+        }
+
+        if (~ slice_refs_empty?(s)) {
+            linked_list = s.preload_ref();
+        } else {
+            linked_list = null();
+        }
+    }
+
+    if (prev_wlen > 0) {
+        int i = 0;
+        int status = 0;
+        int exec = 0;
+        do {
+            try {
+                while (i < prev_wlen) {
+                    (prev_wslice, status) = check_prefix(prev_wslice, fslice);
+                    if (status) {
+                        b~store_uint(value, vlen);
+                        i += flen;
+                    } else {
+                        int bit = prev_wslice~load_uint(1);
+                        b~store_uint(bit, 1);
+                        i += 1;
+                    }
+                }
+                exec = -1;
+            } catch(x, n) {
+                lst = cons(b, lst);
+                b = begin_cell();
+            }
+        } until(exec);
+    }
+
+    while (~ null?(lst)) {
+        builder curr = lst~list_next();
+        b = curr.store_ref(b.end_cell());
+    }
+
+    return b.end_cell();
+}
+
+;; Concatenates two builders. STBR
+;; PUSHREF?
+
+;; Checks whether s begins with (the data bits of) s',
+;;  and removes s' from s on success. On failure throws a
+;;  cell deserialization exception.
+;;  Primitive SDPFXREV can be considered a quiet version of SDBEGINSX.
+
+;; [ref] IFREF

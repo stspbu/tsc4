@@ -1,0 +1,190 @@
+/usr/local/bin/node --require /Applications/IntelliJ IDEA.app/Contents/plugins/JavaScriptLanguage/helpers/jest-intellij/lib/jest-intellij-stdin-fix.js /Users/vbushev/Documents/Projects/tsc4/node_modules/jest/bin/jest.js --colors --reporters /Applications/IntelliJ IDEA.app/Contents/plugins/JavaScriptLanguage/helpers/jest-intellij/lib/jest-intellij-reporter.js --verbose --testNamePattern=^Task3 S: huge expand$ --runTestsByPath /Users/vbushev/Documents/Projects/tsc4/tests/Task3.spec.ts
+  console.log
+    // automatically generated from `contracts/imports/stdlib.fc` `contracts/3.fc`
+    PROGRAM{
+      DECLPROC recv_internal
+      124428 DECLMETHOD find_and_replace
+      recv_internal PROC:<{
+      }>
+      find_and_replace PROC:<{
+        s2 PUSH
+        UBITSIZE
+        s2 PUSH
+        UBITSIZE
+        s0 s4 XCHG
+        NEWC
+        s2 PUSH
+        STUX
+        ENDC
+        CTOS
+        NEWC
+        PUSHNULL
+        0 PUSHINT
+        PUSHNULL
+        WHILE:<{
+          s6 PUSH
+          ISNULL
+          NOT
+        }>DO<{
+          s0 s6 XCHG
+          CTOS
+          DUP
+          SBITS
+          WHILE:<{
+            DUP
+            0 GTINT
+          }>DO<{
+            8 PUSHPOW2
+            s3 PUSH
+            SUB
+            s1 s(-1) PUXC
+            MIN
+            TUCK
+            SUB
+            s2 s1 XCPU
+            LDUX
+            s4 PUSH
+            0 GTINT
+            IF:<{
+              NEWC
+              s0 s10 XCHG2
+              STSLICER
+              s2 PUSH
+              STUX
+              s0 s3 XCHG
+              ADD
+            }>ELSE<{
+              s4 POP
+              s8 POP
+              s0 s7 XCHG
+              NEWC
+              s8 PUSH
+              STUX
+              s0 s1 s7 XCHG3
+            }>
+            s0 s2 XCHG
+            ENDC
+            CTOS
+            s2 s6 PUSH2
+            SUB
+            0 PUSHINT
+            UNTIL:<{
+              s10 s8 s(-2) PU2XC
+              s13 s9 s(-2) PU2XC
+              s10 s9 s(-2) PU2XC
+              s15 s9 s(-2) PU2XC
+              s12 s10 s(-2) PU2XC
+              s11 s(-1) PUXC
+              c4 PUSH
+              c5 PUSH
+              c7 PUSH
+              <{
+                2DROP
+                s7 s6 XCHG2
+                CONS
+                NEWC
+              }>CONT
+              c7 SETCONT
+              c5 SETCONT
+              c4 SETCONT
+              12 PUSHINT
+              -1 PUSHINT
+              SETCONTVARARGS
+              <{
+                WHILE:<{
+                  DUP
+                  -1 GTINT
+                }>DO<{
+                  s1 s6 XCPU
+                  SDBEGINSXQ
+                  IF:<{
+                    s9 s5 PUXC
+                    s11 PUSH
+                    STUX
+                    s1 s7 XCPU
+                    SUB
+                  }>ELSE<{
+                    1 LDU
+                    s0 s6 XCHG
+                    1 STU
+                    SWAP
+                    DEC
+                  }>
+                  s1 s5 XCHG
+                }>
+                s9 s10 XCHG
+                s7 s9 XCHG
+                s7 s8 XCHG
+                s0 s6 XCHG
+                s0 s7 XCHG
+                -1 PUSHINT
+                s5 s6 XCHG2
+                s3 s4 XCHG
+              }>CONT
+              c1 PUSH
+              COMPOSALT
+              SWAP
+              TRY
+              s9 s11 XCHG
+              s9 s10 XCHG
+              s5 s9 XCHG
+              s5 s8 XCHG
+              s5 s7 XCHG
+              s5 s6 XCHG2
+              DUP
+              s4 s5 XCHG
+            }>
+            DROP
+            s7 s(-1) PUXC
+            ADD
+            s1 s3 XCHG
+            MIN
+            s0 s7 s7 XCHG3
+          }>
+          DROP
+          DUP
+          SREMPTY
+          NOT
+          IF:<{
+            PLDREF
+          }>ELSE<{
+            DROP
+            PUSHNULL
+          }>
+          s0 s6 XCHG
+        }>
+        4 4 BLKDROP2
+        s4 POP
+        0 GTINT
+        IF:<{
+          CONS
+          NEWC
+          ROT
+          STSLICER
+        }>ELSE<{
+          s2 POP
+        }>
+        WHILE:<{
+          OVER
+          ISNULL
+          NOT
+        }>DO<{
+          SWAP
+          UNCONS
+          s0 s2 XCHG
+          ENDC
+          SWAP
+          STREF
+        }>
+        NIP
+        ENDC
+      }>
+    }END>c
+
+      at doCompileFunc (node_modules/@ton-community/blueprint/dist/compile/compile.js:48:13)
+
+  console.log
+    gas: 320199
+
+      at Task3.getResult (wrappers/Task3.ts:94:17)
+

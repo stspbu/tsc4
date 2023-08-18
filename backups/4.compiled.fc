@@ -1,0 +1,308 @@
+// automatically generated from `contracts/imports/stdlib.fc` `contracts/4.fc`
+    PROGRAM{
+      DECLPROC recv_internal
+      DECLPROC convert
+      76319 DECLMETHOD caesar_cipher_encrypt
+      86492 DECLMETHOD caesar_cipher_decrypt
+      recv_internal PROC:<{
+      }>
+      convert PROCINLINE:<{
+        SWAP
+        0 PUSHINT
+        1 PUSHINT
+        2 PUSHINT
+        3 PUSHINT
+        4 PUSHINT
+        5 PUSHINT
+        6 PUSHINT
+        7 PUSHINT
+        8 PUSHINT
+        9 PUSHINT
+        10 PUSHINT
+        11 PUSHINT
+        12 PUSHINT
+        13 PUSHINT
+        14 PUSHINT
+        15 PUSHINT
+        16 PUSHINT
+        17 PUSHINT
+        18 PUSHINT
+        19 PUSHINT
+        20 PUSHINT
+        21 PUSHINT
+        22 PUSHINT
+        23 PUSHINT
+        24 PUSHINT
+        25 PUSHINT
+        26 PUSHINT
+        27 PUSHINT
+        28 PUSHINT
+        29 PUSHINT
+        30 PUSHINT
+        31 PUSHINT
+        32 PUSHINT
+        33 PUSHINT
+        34 PUSHINT
+        35 PUSHINT
+        36 PUSHINT
+        37 PUSHINT
+        38 PUSHINT
+        39 PUSHINT
+        40 PUSHINT
+        41 PUSHINT
+        42 PUSHINT
+        43 PUSHINT
+        44 PUSHINT
+        45 PUSHINT
+        46 PUSHINT
+        47 PUSHINT
+        48 PUSHINT
+        49 PUSHINT
+        50 PUSHINT
+        51 PUSHINT
+        52 PUSHINT
+        53 PUSHINT
+        54 PUSHINT
+        55 PUSHINT
+        56 PUSHINT
+        57 PUSHINT
+        58 PUSHINT
+        59 PUSHINT
+        60 PUSHINT
+        61 PUSHINT
+        62 PUSHINT
+        63 PUSHINT
+        64 PUSHINT
+        65 s() PUSH
+        0 PUSHINT
+        26 PUSHINT
+        REPEAT:<{
+            DUP2
+            ADD
+            26 PUSHINT
+            MOD
+            65 PUSHINT
+            ADD
+            ROTREV
+            INC
+        }>
+        2DROP
+        91 PUSHINT
+        92 PUSHINT
+        93 PUSHINT
+        94 PUSHINT
+        95 PUSHINT
+        96 PUSHINT
+        97 s() PUSH
+        0 PUSHINT
+        26 PUSHINT
+        REPEAT:<{
+            DUP2
+            ADD
+            26 PUSHINT
+            MOD
+            97 PUSHINT
+            ADD
+            ROTREV
+            INC
+        }>
+        2DROP
+        123 PUSHINT
+        124 PUSHINT
+        125 PUSHINT
+        126 PUSHINT
+        127 PUSHINT
+        128 PUSHINT
+        129 PUSHINT
+        130 PUSHINT
+        131 PUSHINT
+        132 PUSHINT
+        133 PUSHINT
+        134 PUSHINT
+        135 PUSHINT
+        136 PUSHINT
+        137 PUSHINT
+        138 PUSHINT
+        139 PUSHINT
+        140 PUSHINT
+        141 PUSHINT
+        142 PUSHINT
+        143 PUSHINT
+        144 PUSHINT
+        145 PUSHINT
+        146 PUSHINT
+        147 PUSHINT
+        148 PUSHINT
+        149 PUSHINT
+        150 PUSHINT
+        151 PUSHINT
+        152 PUSHINT
+        153 PUSHINT
+        154 PUSHINT
+        155 PUSHINT
+        156 PUSHINT
+        157 PUSHINT
+        158 PUSHINT
+        159 PUSHINT
+        160 PUSHINT
+        161 PUSHINT
+        162 PUSHINT
+        163 PUSHINT
+        164 PUSHINT
+        165 PUSHINT
+        166 PUSHINT
+        167 PUSHINT
+        168 PUSHINT
+        169 PUSHINT
+        170 PUSHINT
+        171 PUSHINT
+        172 PUSHINT
+        173 PUSHINT
+        174 PUSHINT
+        175 PUSHINT
+        176 PUSHINT
+        177 PUSHINT
+        178 PUSHINT
+        179 PUSHINT
+        180 PUSHINT
+        181 PUSHINT
+        182 PUSHINT
+        183 PUSHINT
+        184 PUSHINT
+        185 PUSHINT
+        186 PUSHINT
+        187 PUSHINT
+        188 PUSHINT
+        189 PUSHINT
+        190 PUSHINT
+        191 PUSHINT
+        192 PUSHINT
+        193 PUSHINT
+        194 PUSHINT
+        195 PUSHINT
+        196 PUSHINT
+        197 PUSHINT
+        198 PUSHINT
+        199 PUSHINT
+        200 PUSHINT
+        201 PUSHINT
+        202 PUSHINT
+        203 PUSHINT
+        204 PUSHINT
+        205 PUSHINT
+        206 PUSHINT
+        207 PUSHINT
+        208 PUSHINT
+        209 PUSHINT
+        210 PUSHINT
+        211 PUSHINT
+        212 PUSHINT
+        213 PUSHINT
+        214 PUSHINT
+        215 PUSHINT
+        216 PUSHINT
+        217 PUSHINT
+        218 PUSHINT
+        219 PUSHINT
+        220 PUSHINT
+        221 PUSHINT
+        222 PUSHINT
+        223 PUSHINT
+        224 PUSHINT
+        225 PUSHINT
+        226 PUSHINT
+        227 PUSHINT
+        228 PUSHINT
+        229 PUSHINT
+        230 PUSHINT
+        231 PUSHINT
+        232 PUSHINT
+        233 PUSHINT
+        234 PUSHINT
+        235 PUSHINT
+        236 PUSHINT
+        237 PUSHINT
+        238 PUSHINT
+        239 PUSHINT
+        240 PUSHINT
+        241 PUSHINT
+        242 PUSHINT
+        243 PUSHINT
+        244 PUSHINT
+        245 PUSHINT
+        246 PUSHINT
+        247 PUSHINT
+        248 PUSHINT
+        249 PUSHINT
+        250 PUSHINT
+        251 PUSHINT
+        252 PUSHINT
+        253 PUSHINT
+        254 PUSHINT
+        255 PUSHINT
+        TUPLEVAR
+        NIP
+        PUSHNULL
+        0 PUSHINT
+        s0 s3 XCHG
+        CTOS
+        32 LDU
+        SWAP
+        NEWC
+        32 STU
+        UNTIL:<{
+          OVER
+          SBITS
+          3 RSHIFT#
+          REPEAT:<{
+            SWAP
+            8 LDU
+            s4 s1 PUXC
+            INDEXVAR
+            ROT
+            8 STU
+          }>
+          OVER
+          SREMPTY
+          NOT
+          IF:<{
+            ROT
+            CONS
+            SWAP
+            PLDREF
+            CTOS
+            NEWC
+          }>ELSE<{
+            -1 PUSHINT
+            s5 POP
+          }>
+          s4 PUSH
+        }>
+        NIP
+        2 2 BLKDROP2
+        WHILE:<{
+          OVER
+          ISNULL
+          NOT
+        }>DO<{
+          SWAP
+          UNCONS
+          s0 s2 XCHG
+          ENDC
+          SWAP
+          STREF
+        }>
+        NIP
+        ENDC
+      }>
+      caesar_cipher_encrypt PROC:<{
+        convert INLINECALLDICT
+      }>
+      caesar_cipher_decrypt PROC:<{
+        26 PUSHINT
+        ROT
+        SUB
+        SWAP
+        convert INLINECALLDICT
+      }>
+    }END>c

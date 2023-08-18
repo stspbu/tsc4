@@ -44,62 +44,76 @@
     builder b = begin_cell();
     tuple lst = null();
 
-    int prev_wlen = 0;
-    slice prev_wslice = null();
+    ;; 408694
 
-    ;; 320189 / 305020 b300
-    ;; 16785 -> 16677
-
-    int exec = 0;
     slice s = linked_list.begin_parse();
+    int sz = slice_bits(s);
 
-    do {
-        int sz = slice_bits(s);
+    while (sz > 0) {
+        slice ns = null();
+        int nsz = 0;
 
-        while (sz > 0) {
-            int wlen = min(sz, 511 - prev_wlen);
-            sz -= wlen;
+        if (~ slice_refs_empty?(s)) {
+            (_, ns) = s.sload_ref();
+            nsz = slice_bits(ns);
+        }
 
-            builder wbuilder = begin_cell();
-            slice word = s~load_bits(wlen);
+        int i = 0;
+        int status = 0;
+        int len = sz - flen;
 
-            if (prev_wlen > 0) {
-                wbuilder = wbuilder.store_slice(prev_wslice);
-                wlen += prev_wlen;
-            }
-
-            slice wslice = wbuilder.store_slice(word).end_cell().begin_parse();
-
+        while (i <= len) {
             lst = cons(b, lst);
             b = begin_cell();
 
-            int shift = wlen - flen;
-            while (shift >= 0) {
-                (wslice, int status) = check_prefix(wslice, fslice);
+            int j = i;
+            int jlen = min(i + 510, len);
+
+            while (j <= jlen) {
+                (s, status) = check_prefix(s, fslice);
                 if (status) {
                     b~store_uint(value, vlen);
-                    shift -= flen;
+                    j += flen;
                 } else {
-                    int bit = wslice~load_uint(1);
+                    int bit = s~load_uint(1);
                     b~store_uint(bit, 1);
-                    shift -= 1;
+                    j += 1;
                 }
             }
 
-            prev_wlen = min(wlen, flen + shift);
-            prev_wslice = wslice;
+            i = j;
         }
 
-        if (~ slice_refs_empty?(s)) {
-            (_, s) = s.sload_ref();
+        if (nsz > 0) {
+            ;; sz - i < flen
+            ;; available > 0
+
+            ;; todo: get rid of extra cell creation
+            int max = min(nsz, flen - 1);
+            slice it = begin_cell().store_slice(s).store_slice(ns.preload_bits(max)).end_cell().begin_parse();
+
+            while (i < sz) {
+                (it, status) = check_prefix(it, fslice);
+                if (status) {
+                    b~store_uint(value, vlen);
+                    i += flen;
+                } else {
+                    int bit = it~load_uint(1);
+                    b~store_uint(bit, 1);
+                    i += 1;
+                }
+            }
+
+            if (i > sz) {
+                ns~skip_bits(i - sz);
+                nsz -= i - sz;
+            }
         } else {
-            exec = -1;
+            b = b.store_slice(s);
         }
-    } until(exec);
 
-    if (prev_wlen > 0) {
-        lst = cons(b, lst);
-        b = begin_cell().store_slice(prev_wslice);
+        s = ns;
+        sz = nsz;
     }
 
     while (~ null?(lst)) {
